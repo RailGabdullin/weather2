@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="Color">
+        <item name="android:color"></item>
+    </style>
+    <style name="WeatherIconsFont">
+        <item name="fontFamily">@font/weathericons_regular_webfont</item>
+    </style>
+
+</resources>

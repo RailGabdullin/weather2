@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Weather</string>
+
+    <string name="na">N/A</string>
+    <string name="humidityTag">Влажность, %: </string>
+    <string name="pressureTag">Давление, мм: </string>
+    <string name="windTag">Сила ветра, м/с: </string>
+    <string name="API_KEY">f043eb6aa0e84f819e771fe2d132277a</string>
+
+    <string name="thunderstorm">\uf01e</string>
+    <string name="drizzle">\uf01a</string>
+    <string name="rain">\uf018</string>
+    <string name="snow">\uf01b</string>
+    <string name="fog">\uf014</string>
+    <string name="clear">\uf00d</string>
+    <string name="cloudy">\uf013</string>
+</resources>
