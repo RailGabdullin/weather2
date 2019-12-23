@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gabdullin.rail.wetherwebinar.db.DataReader;
 import com.gabdullin.rail.wetherwebinar.db.DataSource;
 import com.gabdullin.rail.wetherwebinar.model.Datum;
 import com.gabdullin.rail.wetherwebinar.model.WeatherModel;
@@ -44,7 +43,6 @@ public class MainFragment extends Fragment {
 
     private static SharedPreferences preferences;
     private final String CURRENT_CITY = "CURRENT_CITY";
-    private DataReader dataReader;
     private DataSource dataSource;
 
     public MainFragment(DataSource dataSource) {
@@ -57,8 +55,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-
-    updateWeatherData(container, preferences.getString(CURRENT_CITY, "moscow"));
+        updateWeatherData(container, preferences.getString(CURRENT_CITY, "moscow"));
         return inflater.inflate(R.layout.activity_main, container, false);
     }
 
@@ -112,6 +109,7 @@ public class MainFragment extends Fragment {
                     changeCity(view);
                 } else {
                     updateUIByNewWeatherData(view);
+                    saveDataToHistory();
                 }
                 super.onPostExecute(result);
             }
@@ -152,11 +150,14 @@ public class MainFragment extends Fragment {
             humidity.setText(String.valueOf(weatherDataModelParse.getRh()));
             pressure.setText(String.valueOf(Math.round(weatherDataModelParse.getSlp())));
             windForce.setText(String.valueOf(Math.round(weatherDataModelParse.getWindSpd())));
+    }
 
-            dataSource.add(DateFormat.getDateTimeInstance().format(new Date()),
-                    weatherDataModelParse.getCityName(),
-                    (int) Math.round(weatherDataModelParse.getTemp()),
-                    weatherDataModelParse.getWeather().getDescription());
+    private void saveDataToHistory() {
+        Datum weatherDataModelParse = weatherDataModel.getData().get(0);
+        dataSource.add(DateFormat.getDateTimeInstance().format(new Date()),
+                weatherDataModelParse.getCityName(),
+                (int) Math.round(weatherDataModelParse.getTemp()),
+                weatherDataModelParse.getWeather().getDescription());
     }
 
 

@@ -17,7 +17,7 @@ public class DataReader implements Closeable {
             DataHelper.TABLE_TEMP,
             DataHelper.TABLE_DESC,
     };
-    private Cursor cursore;
+    private Cursor cursor;
 
     public DataReader(SQLiteDatabase database) {
         this.database = database;
@@ -25,11 +25,11 @@ public class DataReader implements Closeable {
 
     public void open(){
         query();
-        cursore.moveToFirst();
+        cursor.moveToFirst();
     }
 
     private void query() {
-        cursore = database.query(DataHelper.TABLE_NAME, all,
+        cursor = database.query(DataHelper.TABLE_NAME, all,
                 null,
                 null,
                 null,
@@ -38,31 +38,31 @@ public class DataReader implements Closeable {
     }
 
     public void refresh(){
-        int position = cursore.getPosition();
+        int position = cursor.getPosition();
         query();
-        cursore.moveToPosition(position);
+        cursor.moveToPosition(position);
     }
 
     @Override
     public void close() throws IOException {
-        cursore.close();
+        cursor.close();
     }
 
-    private Note cursoreToNote(){
+    private Note cursorToNote(){
         Note note = new Note();
-        note.setDate(cursore.getString(1));
-        note.setCity(cursore.getString(2));
-        note.setTemperature(cursore.getInt(3));
-        note.setDescription(cursore.getString(4));
+        note.setDate(cursor.getString(1));
+        note.setCity(cursor.getString(2));
+        note.setTemperature(cursor.getInt(3));
+        note.setDescription(cursor.getString(4));
         return note;
     }
 
     public Note getPosition(int position){
-        cursore.moveToPosition(position);
-        return cursoreToNote();
+        cursor.moveToPosition(position);
+        return cursorToNote();
     }
 
     public int getCount() {
-        return cursore.getCount();
+        return cursor.getCount();
     }
 }

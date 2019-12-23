@@ -28,6 +28,7 @@ class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryNoteHold
 
     @Override
     public void onBindViewHolder(@NonNull HistoryNoteHolder holder, int position) {
+        reader.refresh();
         holder.bind(reader.getPosition(position));
     }
 

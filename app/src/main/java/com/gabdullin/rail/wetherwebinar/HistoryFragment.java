@@ -18,10 +18,13 @@ public class HistoryFragment extends Fragment {
     HistoryAdapter historyAdapter;
     private DataSource dataSource;
 
+//    public HistoryFragment(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.history, container, false);
     }
 
@@ -31,7 +34,7 @@ public class HistoryFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.note_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        historyAdapter = new HistoryAdapter(dataSource.getReader());
+        historyAdapter = new HistoryAdapter(WeatherMain.dataSource.getReader());
         recyclerView.setAdapter(historyAdapter);
     }
 }

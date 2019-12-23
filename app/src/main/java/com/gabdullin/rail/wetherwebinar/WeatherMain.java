@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import com.gabdullin.rail.wetherwebinar.db.DataSource;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 
 import androidx.annotation.NonNull;
@@ -19,12 +18,19 @@ import androidx.core.app.ActivityCompat;
 public class WeatherMain extends AppCompatActivity {
 
     private Bundle savedInstanceStateBundle;
-    private DataSource dataSource;
+    static DataSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savedInstanceStateBundle = savedInstanceState;
+
+        dataSource = new DataSource(this);
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
             start(savedInstanceStateBundle);
@@ -32,13 +38,6 @@ public class WeatherMain extends AppCompatActivity {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 10);
             }
-        }
-
-        dataSource = new DataSource(this);
-        try {
-            dataSource.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -65,7 +64,6 @@ public class WeatherMain extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(this, HistoryActivity.class);
-        intent.putExtra("DATA_SOURCE", (Serializable) dataSource);
         startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
