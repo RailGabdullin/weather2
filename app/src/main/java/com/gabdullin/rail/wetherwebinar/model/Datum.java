@@ -62,7 +62,7 @@ public class Datum {
     private Double vis;
     @SerializedName("h_angle")
     @Expose
-    private Integer hAngle;
+    private Double hAngle;
     @SerializedName("sunset")
     @Expose
     private String sunset;
@@ -262,11 +262,11 @@ public class Datum {
         this.vis = vis;
     }
 
-    public Integer getHAngle() {
+    public Double getHAngle() {
         return hAngle;
     }
 
-    public void setHAngle(Integer hAngle) {
+    public void setHAngle(Double hAngle) {
         this.hAngle = hAngle;
     }
 

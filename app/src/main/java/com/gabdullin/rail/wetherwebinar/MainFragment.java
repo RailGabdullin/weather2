@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gabdullin.rail.wetherwebinar.db.DataReader;
+import com.gabdullin.rail.wetherwebinar.db.DataSource;
 import com.gabdullin.rail.wetherwebinar.model.Datum;
 import com.gabdullin.rail.wetherwebinar.model.WeatherModel;
 
@@ -42,13 +44,21 @@ public class MainFragment extends Fragment {
 
     private static SharedPreferences preferences;
     private final String CURRENT_CITY = "CURRENT_CITY";
+    private DataReader dataReader;
+    private DataSource dataSource;
+
+    public MainFragment(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        updateWeatherData(container, preferences.getString(CURRENT_CITY, "moscow"));
+
+
+    updateWeatherData(container, preferences.getString(CURRENT_CITY, "moscow"));
         return inflater.inflate(R.layout.activity_main, container, false);
     }
 
@@ -108,6 +118,11 @@ public class MainFragment extends Fragment {
         }.execute();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
     private void updateUIByNewWeatherData(View view) {
 
             initUI(view);
@@ -137,7 +152,13 @@ public class MainFragment extends Fragment {
             humidity.setText(String.valueOf(weatherDataModelParse.getRh()));
             pressure.setText(String.valueOf(Math.round(weatherDataModelParse.getSlp())));
             windForce.setText(String.valueOf(Math.round(weatherDataModelParse.getWindSpd())));
+
+            dataSource.add(DateFormat.getDateTimeInstance().format(new Date()),
+                    weatherDataModelParse.getCityName(),
+                    (int) Math.round(weatherDataModelParse.getTemp()),
+                    weatherDataModelParse.getWeather().getDescription());
     }
+
 
     private void updateWeatherIcon(int weatherCode) {
         if (weatherCode == 800) {
