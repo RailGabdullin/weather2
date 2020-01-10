@@ -1,6 +1,7 @@
 package com.gabdullin.rail.wetherwebinar;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import com.gabdullin.rail.wetherwebinar.model.WeatherModel;
@@ -54,24 +55,26 @@ class WeatherDataLoader {
         }
     }
 
-    static WeatherModel requestRetrofit(Context context, String city, String language){
+    static WeatherModel requestRetrofitByCity(Context context, String city, String language){
         initRetrofit();
         Log.i("RETROFIT", "New retrofit");
         try {
-            responseWeatherModel = weatherbit.loadWeather(language, city, context.getString(R.string.API_KEY))
-    //                .enqueue(new Callback<WeatherModel>() {
-    //                    @Override
-    //                    public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
-    //                        responseWeatherModel = response.body();
-    //                        Log.i("RETROFIT_SUCCESS", responseWeatherModel.toString());
-    //                    }
-    //
-    //                    @Override
-    //                    public void onFailure(Call<WeatherModel> call, Throwable t) {
-    //                        Log.i("RETROFIT_ERROR", "fail request: " + t);
-    //                    }
-    //                });
+            responseWeatherModel = weatherbit.loadWeatherByCity(language, city, context.getString(R.string.API_KEY))
             .execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return responseWeatherModel;
+    }
+
+    static WeatherModel requestRetrofitByLocation(Context context, Location location, String language){
+        initRetrofit();
+        Log.i("RETROFIT", "New retrofit");
+        String longitude = String.valueOf(location.getLongitude());
+        String latitude = String.valueOf(location.getLatitude());
+        try {
+            responseWeatherModel = weatherbit.loadWeatherByLocation(language, latitude, longitude, context.getString(R.string.API_KEY))
+                    .execute().body();
         } catch (IOException e) {
             e.printStackTrace();
         }

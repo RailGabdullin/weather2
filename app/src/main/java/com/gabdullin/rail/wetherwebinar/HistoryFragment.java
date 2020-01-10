@@ -34,7 +34,7 @@ public class HistoryFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.note_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        historyAdapter = new HistoryAdapter(WeatherMain.dataSource.getReader());
+        historyAdapter = new HistoryAdapter(DataSource.getDataSource(getActivity()).getReader());
         recyclerView.setAdapter(historyAdapter);
     }
 }

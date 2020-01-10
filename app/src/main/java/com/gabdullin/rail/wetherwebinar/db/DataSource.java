@@ -12,12 +12,18 @@ import java.sql.SQLException;
 
 public class DataSource implements Closeable {
 
+    private static DataSource dataSource;
     private final DataHelper dbHelper;
     private SQLiteDatabase database;
     private DataReader reader;
 
-    public DataSource(Context context) {
+    private DataSource(Context context) {
         dbHelper = new DataHelper(context);
+    }
+
+    public static DataSource getDataSource(Context context) {
+        if(dataSource == null) dataSource = new DataSource(context);
+        return dataSource;
     }
 
     public void open() throws SQLException {

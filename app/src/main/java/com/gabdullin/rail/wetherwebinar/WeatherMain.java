@@ -1,9 +1,10 @@
 package com.gabdullin.rail.wetherwebinar;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,25 +19,31 @@ import androidx.core.app.ActivityCompat;
 public class WeatherMain extends AppCompatActivity {
 
     private Bundle savedInstanceStateBundle;
-    static DataSource dataSource;
+    private DataSource dataSource;
+    private final int PERMISSION_REQUEST_CODE = 10;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savedInstanceStateBundle = savedInstanceState;
 
-        dataSource = new DataSource(this);
+        dataSource = DataSource.getDataSource(this);
         try {
             dataSource.open();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             start(savedInstanceStateBundle);
         } else {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 10);
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET) &&
+                !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
             }
         }
     }
@@ -44,15 +51,21 @@ public class WeatherMain extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 10) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            boolean allPermissionsGranted = true;
+            for (int i : grantResults) {
+                Log.i("PERMISSIONS: ", permissions[i] + grantResults[i]);
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) allPermissionsGranted = false;
+            }
+            if (grantResults.length > 0 && allPermissionsGranted) {
                 start(savedInstanceStateBundle);
             }
         }
     }
 
     private void start(Bundle savedInstanceState) {
-        if(savedInstanceState == null) getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment(dataSource)).commit();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if(savedInstanceState == null) getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment(dataSource, locationManager)).commitAllowingStateLoss();
     }
 
     @Override
@@ -63,8 +76,8 @@ public class WeatherMain extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
+
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new HistoryFragment()).addToBackStack(null).commit();
         return super.onOptionsItemSelected(item);
     }
 }
