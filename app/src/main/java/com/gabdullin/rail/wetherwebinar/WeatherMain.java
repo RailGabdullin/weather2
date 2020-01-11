@@ -4,13 +4,13 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.gabdullin.rail.wetherwebinar.db.DataSource;
+import com.gabdullin.rail.wetherwebinar.db.LocationDataReader;
+import com.gabdullin.rail.wetherwebinar.db.LocationsDataSource;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,21 +19,18 @@ import androidx.core.app.ActivityCompat;
 public class WeatherMain extends AppCompatActivity {
 
     private Bundle savedInstanceStateBundle;
-    private DataSource dataSource;
     private final int PERMISSION_REQUEST_CODE = 10;
     private LocationManager locationManager;
+    private ArrayList<String> locationList = new ArrayList<>();
+
+    private LocationsDataSource locationsDataSource;
+    private LocationDataReader locationDataReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savedInstanceStateBundle = savedInstanceState;
 
-        dataSource = DataSource.getDataSource(this);
-        try {
-            dataSource.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -54,7 +51,6 @@ public class WeatherMain extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             boolean allPermissionsGranted = true;
             for (int i : grantResults) {
-                Log.i("PERMISSIONS: ", permissions[i] + grantResults[i]);
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) allPermissionsGranted = false;
             }
             if (grantResults.length > 0 && allPermissionsGranted) {
@@ -65,7 +61,14 @@ public class WeatherMain extends AppCompatActivity {
 
     private void start(Bundle savedInstanceState) {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(savedInstanceState == null) getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment(dataSource, locationManager)).commitAllowingStateLoss();
+        if(savedInstanceState == null) {
+            initLocationDataSource();
+            for(int i = 0; i < locationDataReader.getCount(); i++){
+                locationList.add(locationDataReader.getPosition(i).getcityName());
+            }
+            if(locationList.size() == 0 ){locationList.add("moscow");}
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment(locationManager, locationList, locationsDataSource)).commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -76,8 +79,12 @@ public class WeatherMain extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new HistoryFragment()).addToBackStack(null).commit();
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initLocationDataSource(){
+        locationsDataSource = new LocationsDataSource(getApplicationContext());
+        locationsDataSource.open();
+        locationDataReader = locationsDataSource.getLocationDataReader();
     }
 }
