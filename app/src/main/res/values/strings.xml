@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Weather</string>
+    <string name="app_name">Simple Weather</string>
 
-    <string name="na">N/A</string>
+    <string name="na">loading</string>
     <string name="humidityTag">Влажность, %: </string>
     <string name="pressureTag">Давление, мм: </string>
     <string name="windTag">Сила ветра, м/с: </string>
@@ -14,4 +14,6 @@
     <string name="fog">\uf014</string>
     <string name="clear">\uf00d</string>
     <string name="cloudy">\uf013</string>
+    <string name="location_icon">  </string>
+    <string name="add_new_location_button">+</string>
 </resources>
