@@ -7,11 +7,10 @@
     android:background="@android:color/background_dark"
     tools:context=".WeatherMain">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/locationCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_centerHorizontal="true">
         <TextView
             android:id="@+id/location"
@@ -20,8 +19,7 @@
             android:text="@string/location_icon"
             android:textSize="30sp"
             android:fontFamily="@font/weathericons_regular_webfont"
-            android:textColor="@android:color/background_light"
-            android:layout_centerHorizontal="true"/>
+            android:textColor="@android:color/background_light"/>
         <TextView
             android:id="@+id/city"
             android:layout_width="wrap_content"
@@ -30,8 +28,17 @@
             android:text="@string/na"
             android:textSize="30sp"
             android:fontFamily="@font/weathericons_regular_webfont"
-            android:textColor="@android:color/background_light" />
-    </LinearLayout>
+            android:textColor="@android:color/background_light"
+            android:layout_toEndOf="@+id/location"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_location"
+            android:textSize="15sp"
+            android:textColor="@android:color/background_light"
+            android:layout_toEndOf="@+id/city"
+            android:id="@+id/remove_location"/>
+        </RelativeLayout>
 
     <TextView
         android:id="@+id/updated"

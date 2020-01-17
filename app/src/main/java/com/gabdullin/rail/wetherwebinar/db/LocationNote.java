@@ -13,7 +13,7 @@ public class LocationNote {
         this.id = id;
     }
 
-    public String getcityName() {
+    public String getCityName() {
         return cityName;
     }
 

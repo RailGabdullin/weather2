@@ -16,4 +16,5 @@
     <string name="cloudy">\uf013</string>
     <string name="location_icon">  </string>
     <string name="add_new_location_button">+</string>
+    <string name="remove_location">x</string>
 </resources>

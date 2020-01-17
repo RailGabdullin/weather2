@@ -32,33 +32,32 @@ public class LocationsDataSource implements Closeable {
     }
 
     // Добавить новую запись
-    public LocationNote addNote(String description) {
+    public void addNote(String location) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_LOCATION, description);
+        values.put(DatabaseHelper.COLUMN_LOCATION, location);
         // Добавление записи
-        long insertId = database.insert(DatabaseHelper.TABLE_LOCATIONS, null,
+        database.insert(DatabaseHelper.TABLE_LOCATIONS, null,
                 values);
-        LocationNote newNote = new LocationNote();
-        newNote.setCityName(description);
-        newNote.setId(insertId);
-        return newNote;
     }
 
     // Изменить запись
-    public void editNote(LocationNote note, String description) {
+    public void editNote(String currentLocation, String newLocation) {
         ContentValues editedNote = new ContentValues();
-        editedNote.put(dbHelper.COLUMN_ID, note.getId());
-        editedNote.put(dbHelper.COLUMN_LOCATION, description);
+        editedNote.put(dbHelper.COLUMN_LOCATION, newLocation);
         // Изменение записи
         database.update(dbHelper.TABLE_LOCATIONS,
                 editedNote,
-                dbHelper.COLUMN_ID + "=" + note.getId(),
+                dbHelper.COLUMN_LOCATION + " = '" + currentLocation + "'",
                 null);
     }
 
     // Удалить запись
-    public void deleteNote(LocationNote note) {
-        long id = note.getId();
+    public void deleteNote(String location) {
+        database.delete(DatabaseHelper.TABLE_LOCATIONS, DatabaseHelper.COLUMN_LOCATION
+                + " = '" + location + "'", null);
+    }
+
+    public void deleteNote(int id) {
         database.delete(DatabaseHelper.TABLE_LOCATIONS, DatabaseHelper.COLUMN_ID
                 + " = " + id, null);
     }

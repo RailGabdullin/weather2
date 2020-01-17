@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 
 public class WeatherMain extends AppCompatActivity {
 
+    public static final String INIT_LOCATION = "initLocation";
     private Bundle savedInstanceStateBundle;
     private final int PERMISSION_REQUEST_CODE = 10;
     private LocationManager locationManager;
@@ -29,6 +31,7 @@ public class WeatherMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         savedInstanceStateBundle = savedInstanceState;
 
 
@@ -63,12 +66,21 @@ public class WeatherMain extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if(savedInstanceState == null) {
             initLocationDataSource();
+            locationsDataSource.deleteAll();
             for(int i = 0; i < locationDataReader.getCount(); i++){
-                locationList.add(locationDataReader.getPosition(i).getcityName());
+                locationList.add(locationDataReader.getPosition(i).getCityName());
+                Log.i("DB: ", locationDataReader.getPosition(i).getCityName());
             }
-            if(locationList.size() == 0 ){locationList.add("moscow");}
+            if(locationList.size() == 0 ){
+                locationsDataSource.addNote(INIT_LOCATION);
+                locationList.add(INIT_LOCATION);
+                for(int i = 0; i < locationDataReader.getCount(); i++){
+                    Log.i("DB2: ", locationDataReader.getPosition(i).toString());
+                }
+            }
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment(locationManager, locationList, locationsDataSource)).commitAllowingStateLoss();
         }
+        Log.i("ONCREATE: ", locationList.toString());
     }
 
     @Override

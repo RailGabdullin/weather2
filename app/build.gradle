@@ -1,6 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Docs/Dev/Android/AppKeyStore')
+            storePassword 'Synergyinspace11235'
+            keyAlias = 'WeatherApp'
+            keyPassword 'Weather11235'
+        }
+        release {
+            storeFile file('/Docs/Dev/Android/AppKeyStore')
+            storePassword 'Synergyinspace11235'
+            keyAlias = 'WeatherApp'
+            keyPassword 'Weather11235'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.gabdullin.rail.wetherwebinar"
@@ -14,6 +28,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -23,8 +38,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

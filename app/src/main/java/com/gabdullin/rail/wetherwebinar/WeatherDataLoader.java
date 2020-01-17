@@ -55,11 +55,11 @@ class WeatherDataLoader {
         }
     }
 
-    static WeatherModel requestRetrofitByCity(Context context, String city, String language){
+    static WeatherModel requestRetrofitByCity(String api_key, String city, String language){
         initRetrofit();
         Log.i("RETROFIT", "New retrofit");
         try {
-            responseWeatherModel = weatherbit.loadWeatherByCity(language, city, context.getString(R.string.API_KEY))
+            responseWeatherModel = weatherbit.loadWeatherByCity(language, city, api_key)
             .execute().body();
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,13 +67,13 @@ class WeatherDataLoader {
         return responseWeatherModel;
     }
 
-    static WeatherModel requestRetrofitByLocation(Context context, Location location, String language){
+    static WeatherModel requestRetrofitByLocation(String api_key, Location location, String language){
         initRetrofit();
         Log.i("RETROFIT", "New retrofit");
         String longitude = String.valueOf(location.getLongitude());
         String latitude = String.valueOf(location.getLatitude());
         try {
-            responseWeatherModel = weatherbit.loadWeatherByLocation(language, latitude, longitude, context.getString(R.string.API_KEY))
+            responseWeatherModel = weatherbit.loadWeatherByLocation(language, latitude, longitude, api_key)
                     .execute().body();
         } catch (IOException e) {
             e.printStackTrace();
